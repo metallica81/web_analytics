@@ -1,0 +1,158 @@
+.questionPanel {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  width: 480px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+
+.rowAppear {
+  opacity: 0;
+  transform: translateY(24px) scale(0.9);
+  animation: rowSlideIn 0.35s ease forwards;
+}
+
+@keyframes rowSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.panelTitle {
+  font-size: 28px;
+  font-weight: 600;
+  color: #c41e3a;
+  margin-bottom: 30px;
+}
+
+.questionSection {
+  margin-bottom: 35px;
+}
+
+.questionText {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.answerOption {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 15px;
+  color: #333;
+  width: 100%;
+  text-align: left;
+}
+
+.answerOption:hover {
+  background: #f9f9f9;
+  border-color: #c41e3a;
+}
+
+.selected {
+  background: #fef5f7;
+  border-color: #c41e3a;
+  color: #c41e3a;
+}
+
+.checkButton {
+  background: #c41e3a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 14px 32px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.checkButton:hover {
+  background: #a01729;
+}
+
+.rewardMessage {
+  background: #e8f5e9;
+  border: 1px solid #81c784;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-top: 20px;
+  text-align: center;
+  font-size: 16px;
+  color: #2e7d32;
+  font-weight: 500;
+  animation: slideDown 0.3s ease;
+}
+
+.waitingMessage {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  font-size: 16px;
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutUp {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-16px);
+  }
+}
+
+.exiting {
+  animation: fadeOutUp 0.5s ease forwards;
+  pointer-events: none;
+}
+
+@media (max-width: 1200px) {
+  .questionPanel {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .questionPanel {
+    padding: 24px;
+  }
+
+  .panelTitle {
+    font-size: 24px;
+  }
+}

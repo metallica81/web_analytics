@@ -1,0 +1,108 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans bg-accent text-dark;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-semibold text-primary;
+  }
+
+  a {
+    @apply text-primary hover:underline;
+  }
+}
+
+@keyframes roadmapPulse {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  60% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.roadmap-pulse-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: roadmapPulse 2400ms ease-out infinite;
+  /* animation-delay задаётся inline; до старта — 0% keyframe (invisible, scale 0.3) */
+  animation-fill-mode: both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .roadmap-pulse-ring {
+    animation: none;
+    opacity: 0.55;
+  }
+
+  .roadmap-line-segment {
+    animation: none !important;
+    stroke-dashoffset: 0 !important;
+    stroke-dasharray: 0 !important;
+  }
+
+  .roadmap-node-fill-anim {
+    animation: none;
+    fill: #b70037;
+    stroke: #b70037;
+  }
+
+  .roadmap-label-fill-anim {
+    animation: none;
+    fill: #b70037;
+  }
+}
+
+@keyframes roadmapLineDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.roadmap-line-segment {
+  /* stroke-dasharray и stroke-dashoffset задаются inline через getTotalLength() */
+  animation-name: roadmapLineDraw;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes roadmapNodeFill {
+  to {
+    fill: #b70037;
+    stroke: #b70037;
+  }
+}
+
+.roadmap-node-fill-anim {
+  animation-name: roadmapNodeFill;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes roadmapLabelFill {
+  to {
+    fill: #b70037;
+  }
+}
+
+.roadmap-label-fill-anim {
+  animation-name: roadmapLabelFill;
+  animation-timing-function: ease-out;
+  animation-fill-mode: forwards;
+}

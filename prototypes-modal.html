@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Прототипы модального окна — Неправильный ответ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #f0f0f0;
+      padding: 40px 20px;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 48px;
+      font-size: 15px;
+    }
+    .proto-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 40px;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .proto-card {
+      background: #e8e8e8;
+      border-radius: 16px;
+      padding: 32px;
+      position: relative;
+    }
+    .proto-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+    }
+    .proto-name {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+    .proto-desc {
+      font-size: 13px;
+      color: #777;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* Simulated game background */
+    .game-bg {
+      background: #f5f5f5;
+      border-radius: 12px;
+      padding: 30px;
+      position: relative;
+      min-height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .game-bg::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 20px,
+        rgba(183,0,55,0.03) 20px,
+        rgba(183,0,55,0.03) 40px
+      );
+      border-radius: 12px;
+    }
+    .game-bg.dimmed::before {
+      background: rgba(0,0,0,0.4);
+      z-index: 1;
+    }
+
+    /* ===================== VARIANT 1: Classic centered modal ===================== */
+    .modal-v1 {
+      position: relative;
+      z-index: 2;
+      background: white;
+      border-radius: 16px;
+      padding: 36px 32px 28px;
+      width: 340px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .modal-v1 .icon-circle {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #fef2f4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 18px;
+    }
+    .modal-v1 .icon-circle svg {
+      width: 32px;
+      height: 32px;
+      color: #c41e3a;
+    }
+    .modal-v1 h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+    .modal-v1 p {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .modal-v1 .btn {
+      background: #c41e3a;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 36px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      width: 100%;
+      transition: background 0.2s;
+    }
+    .modal-v1 .btn:hover { background: #a01729; }
+
+    /* ===================== VARIANT 2: Toast / Snackbar ===================== */
+    .toast-v2-wrapper {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      width: 90%;
+      max-width: 400px;
+    }
+    .toast-v2 {
+      background: #1a1a1a;
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
+    .toast-v2 .toast-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: #c41e3a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .toast-v2 .toast-icon svg {
+      width: 20px;
+      height: 20px;
+      color: white;
+    }
+    .toast-v2 .toast-text {
+      flex: 1;
+    }
+    .toast-v2 .toast-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 2px;
+    }
+    .toast-v2 .toast-subtitle {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+    }
+    .toast-v2 .toast-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .toast-v2 .toast-close svg {
+      width: 16px;
+      height: 16px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    /* ===================== VARIANT 3: Inline / embedded in panel ===================== */
+    .inline-v3-panel {
+      background: white;
+      border-radius: 12px;
+      padding: 28px;
+      width: 320px;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .inline-v3-panel .panel-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #c41e3a;
+      margin-bottom: 16px;
+    }
+    .inline-v3-panel .question {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 12px;
+    }
+    .inline-v3-answer {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #333;
+    }
+    .inline-v3-answer.wrong {
+      border-color: #c41e3a;
+      background: #fef2f4;
+      position: relative;
+    }
+    .inline-v3-error {
+      background: linear-gradient(135deg, #fef2f4, #fff5f5);
+      border: 1px solid #f5c6ce;
+      border-radius: 10px;
+      padding: 14px 18px;
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .inline-v3-error svg {
+      width: 20px;
+      height: 20px;
+      color: #c41e3a;
+      flex-shrink: 0;
+    }
+    .inline-v3-error .error-text {
+      font-size: 13px;
+      color: #c41e3a;
+      font-weight: 500;
+    }
+
+    /* ===================== VARIANT 4: Slide-down banner ===================== */
+    .banner-v4-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 2;
+    }
+    .banner-v4 {
+      background: linear-gradient(135deg, #c41e3a, #e63e5c);
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-radius: 0 0 16px 16px;
+      box-shadow: 0 4px 20px rgba(196, 30, 58, 0.3);
+    }
+    .banner-v4 .banner-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .banner-v4 .banner-icon svg {
+      width: 18px;
+      height: 18px;
+      color: white;
+    }
+    .banner-v4 .banner-text {
+      flex: 1;
+    }
+    .banner-v4 .banner-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: white;
+    }
+    .banner-v4 .banner-subtitle {
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+      margin-top: 2px;
+    }
+    .banner-v4 .banner-close {
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: white;
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .banner-v4 .banner-close svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* ===================== VARIANT 5: Card shake + modal with hint ===================== */
+    .modal-v5 {
+      position: relative;
+      z-index: 2;
+      background: white;
+      border-radius: 20px;
+      padding: 32px 28px 24px;
+      width: 360px;
+      text-align: center;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.12), 0 2px 12px rgba(0,0,0,0.08);
+      border-top: 4px solid #c41e3a;
+    }
+    .modal-v5 .emoji-icon {
+      font-size: 48px;
+      margin-bottom: 14px;
+      line-height: 1;
+    }
+    .modal-v5 h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 6px;
+    }
+    .modal-v5 p {
+      font-size: 14px;
+      color: #888;
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+    .modal-v5 .hint-box {
+      background: #fffbea;
+      border: 1px solid #ffe082;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin: 16px 0 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      text-align: left;
+    }
+    .modal-v5 .hint-box .hint-icon {
+      font-size: 16px;
+      line-height: 1.4;
+      flex-shrink: 0;
+    }
+    .modal-v5 .hint-box .hint-text {
+      font-size: 13px;
+      color: #7a6200;
+      line-height: 1.5;
+    }
+    .modal-v5 .btn-row {
+      display: flex;
+      gap: 10px;
+    }
+    .modal-v5 .btn-retry {
+      flex: 1;
+      background: #c41e3a;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .modal-v5 .btn-skip {
+      background: #f5f5f5;
+      color: #666;
+      border: none;
+      border-radius: 10px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* ===================== VARIANT 6: Minimalist side slide ===================== */
+    .slide-v6-wrapper {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 2;
+    }
+    .slide-v6 {
+      background: white;
+      border-radius: 14px;
+      padding: 20px;
+      width: 260px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      border-left: 4px solid #c41e3a;
+    }
+    .slide-v6 .slide-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .slide-v6 .slide-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #c41e3a;
+    }
+    .slide-v6 .slide-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+    .slide-v6 .slide-msg {
+      font-size: 13px;
+      color: #888;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    .slide-v6 .slide-progress {
+      height: 4px;
+      background: #f0f0f0;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .slide-v6 .slide-progress-fill {
+      height: 100%;
+      width: 33%;
+      background: #c41e3a;
+      border-radius: 2px;
+    }
+    .slide-v6 .slide-attempts {
+      font-size: 11px;
+      color: #aaa;
+      margin-top: 6px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Прототипы: Окно "Неправильный ответ"</h1>
+  <p class="subtitle">6 вариантов для замены стандартного alert(). Выбери понравившийся — реализуем в коде.</p>
+
+  <div class="proto-grid">
+
+    <!-- ===== VARIANT 1 ===== -->
+    <div class="proto-card">
+      <div class="proto-label">Вариант 1</div>
+      <div class="proto-name">Классический модал</div>
+      <div class="proto-desc">Центрированное окно с затемнением фона. Иконка, текст, кнопка. Простой и понятный.</div>
+      <div class="game-bg dimmed">
+        <div class="modal-v1">
+          <div class="icon-circle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+          </div>
+          <h3>Неправильный ответ</h3>
+          <p>Попробуйте ещё раз! У вас осталось 2 попытки.</p>
+          <button class="btn">Попробовать снова</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== VARIANT 2 ===== -->
+    <div class="proto-card">
+      <div class="proto-label">Вариант 2</div>
+      <div class="proto-name">Toast / Snackbar</div>
+      <div class="proto-desc">Всплывает снизу, не блокирует интерфейс. Исчезает автоматически через 3 секунды или по клику.</div>
+      <div class="game-bg" style="position: relative;">
+        <div style="color: #aaa; font-size: 14px; z-index:0; position:relative;">[игровое поле остаётся активным]</div>
+        <div class="toast-v2-wrapper">
+          <div class="toast-v2">
+            <div class="toast-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </div>
+            <div class="toast-text">
+              <div class="toast-title">Неправильно!</div>
+              <div class="toast-subtitle">Попробуйте другой вариант. Осталось 2 попытки.</div>
+            </div>
+            <button class="toast-close">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== VARIANT 3 ===== -->
+    <div class="proto-card">
+      <div class="proto-label">Вариант 3</div>
+      <div class="proto-name">Inline-уведомление</div>
+      <div class="proto-desc">Ошибка показывается прямо внутри панели вопроса, под выбранным ответом. Без модала вообще.</div>
+      <div class="game-bg">
+        <div class="inline-v3-panel">
+          <div class="panel-title">Тест по модулю</div>
+          <div class="question">1/6. Какова основная цель вводного модуля?</div>
+          <div class="inline-v3-answer wrong">Познакомить с историей страхования</div>
+          <div class="inline-v3-answer">Помочь новичку ориентироваться</div>
+          <div class="inline-v3-answer">Проверить знания нового сотрудника</div>
+          <div class="inline-v3-error">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span class="error-text">Неверно! Подумайте ещё раз.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== VARIANT 4 ===== -->
+    <div class="proto-card">
+      <div class="proto-label">Вариант 4</div>
+      <div class="proto-name">Слайд-баннер сверху</div>
+      <div class="proto-desc">Красный баннер выезжает сверху на всю ширину. Яркий, заметный, авто-скрывается через 3 сек.</div>
+      <div class="game-bg" style="position: relative;">
+        <div class="banner-v4-wrapper">
+          <div class="banner-v4">
+            <div class="banner-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+            </div>
+            <div class="banner-text">
+              <div class="banner-title">Неправильный ответ!</div>
+              <div class="banner-subtitle">Попробуйте другой вариант. Осталось 2 попытки.</div>
+            </div>
+            <button class="banner-close">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+        </div>
+        <div style="color: #aaa; font-size: 14px;">[игровое поле под баннером]</div>
+      </div>
+    </div>
+
+    <!-- ===== VARIANT 5 ===== -->
+    <div class="proto-card">
+      <div class="proto-label">Вариант 5</div>
+      <div class="proto-name">Модал с подсказкой</div>
+      <div class="proto-desc">Как вариант 1, но с жёлтым блоком-подсказкой и двумя кнопками: "Попробовать" и "Пропустить".</div>
+      <div class="game-bg dimmed">
+        <div class="modal-v5">
+          <div class="emoji-icon">😔</div>
+          <h3>Не угадали!</h3>
+          <p>Этот ответ неверный, но вы на правильном пути.</p>
+          <div class="hint-box">
+            <span class="hint-icon">💡</span>
+            <span class="hint-text">Подсказка: Подумайте, что нужно новому сотруднику в первый день.</span>
+          </div>
+          <div class="btn-row">
+            <button class="btn-skip">Пропустить</button>
+            <button class="btn-retry">Попробовать</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== VARIANT 6 ===== -->
+    <div class="proto-card">
+      <div class="proto-label">Вариант 6</div>
+      <div class="proto-name">Боковая карточка</div>
+      <div class="proto-desc">Компактная карточка выезжает сбоку. Не блокирует игру, показывает прогресс попыток.</div>
+      <div class="game-bg" style="position: relative;">
+        <div style="color: #aaa; font-size: 14px; z-index:0; position:relative;">[игровое поле]</div>
+        <div class="slide-v6-wrapper">
+          <div class="slide-v6">
+            <div class="slide-header">
+              <div class="slide-dot"></div>
+              <div class="slide-title">Неправильно</div>
+            </div>
+            <div class="slide-msg">Попробуйте выбрать другой вариант ответа.</div>
+            <div class="slide-progress">
+              <div class="slide-progress-fill"></div>
+            </div>
+            <div class="slide-attempts">Попытка 1 из 3</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

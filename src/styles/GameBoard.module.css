@@ -1,0 +1,74 @@
+.gameBoard {
+  flex: 1;
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  min-width: 0;
+  transition: flex 0.5s ease-in-out;
+}
+
+.gameHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.balanceDisplay {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.balanceAmount {
+  color: #c41e3a;
+  margin-left: 6px;
+}
+
+.progressDisplay {
+  font-size: 14px;
+  color: #666;
+  white-space: nowrap;
+}
+
+.progressNumber {
+  font-weight: 600;
+  color: #c41e3a;
+  margin-left: 6px;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cardAppear {
+  opacity: 0;
+  transform: translateY(24px) scale(0.9);
+  animation: cardRowAppear 0.35s ease forwards;
+}
+
+@keyframes cardRowAppear {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .gameBoard {
+    padding: 24px;
+  }
+
+  .cardsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+}
