@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { CardGameRoot } from "../components/CardGame";
 import ShopModal from "../components/ShopModal";
 import RoadmapTransitionSvg, { calcRoadmapDurationMs } from "../components/RoadmapTransitionSvg";
+import { asset } from "../utils/asset";
 
 
 // Для каждого модуля: название, файл с материалами и свой набор вопросов
@@ -11,7 +12,7 @@ const modules = [
   {
     id: 1,
     title: "Добро пожаловать",
-    materials: "/materials/module-1.docx",
+    materials: asset("materials/module-1.docx"),
     questions: [
       {
         text: "Какова основная цель вводного модуля?",
@@ -72,7 +73,7 @@ const modules = [
   {
     id: 2,
     title: "История и наследие",
-    materials: "/materials/module-2.docx",
+    materials: asset("materials/module-2.docx"),
     questions: [
       {
         text: "Почему история компании важна для сотрудника?",
@@ -129,7 +130,7 @@ const modules = [
   {
     id: 3,
     title: "Корпоративная культура",
-    materials: "/materials/module-3.docx",
+    materials: asset("materials/module-3.docx"),
     questions: [
       {
         text: "Что такое корпоративная культура?",
@@ -190,7 +191,7 @@ const modules = [
   {
     id: 4,
     title: "Люди и структура",
-    materials: "/materials/module-4.docx",
+    materials: asset("materials/module-4.docx"),
     questions: [
       {
         text: "Где лучше всего смотреть актуальную организационную структуру?",
@@ -251,7 +252,7 @@ const modules = [
   {
     id: 5,
     title: "Бизнес и продукты",
-    materials: "/materials/module-5.docx",
+    materials: asset("materials/module-5.docx"),
     questions: [
       {
         text: "Что должен знать сотрудник о продуктах компании?",
@@ -312,7 +313,7 @@ const modules = [
   {
     id: 6,
     title: "Инструменты и процессы",
-    materials: "/materials/module-6.docx",
+    materials: asset("materials/module-6.docx"),
     questions: [
       {
         text: "Что важно при работе с внутренними ИТ-системами?",
@@ -373,7 +374,7 @@ const modules = [
   {
     id: 7,
     title: "Финальный квест",
-    materials: "/materials/module-7.docx",
+    materials: asset("materials/module-7.docx"),
     questions: [
       {
         text: "Какова цель финального квеста?",
@@ -622,7 +623,7 @@ export default function ModulePage({ completedModules, setCompletedModules, modu
       <div
         className="pointer-events-none absolute inset-0 z-0"
         style={{
-          backgroundImage: "url('/watermark.svg')",
+          backgroundImage: `url('${asset("watermark.svg")}')`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "110%",
@@ -648,7 +649,7 @@ export default function ModulePage({ completedModules, setCompletedModules, modu
 
         <Link to="/">
           <img
-            src="/logo.png"
+            src={asset("logo.png")}
             alt="РОСГОССТРАХ"
             className="h-24 object-contain mx-auto"
           />

@@ -1,12 +1,24 @@
-name: Build & Deploy
+name: Build & Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - master
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Параллельные деплои не нужны: если пушей несколько подряд,
+# доезжает последний, начатый не прерываем.
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -19,11 +31,17 @@ jobs:
       - run: npm ci
       - run: npm run build
 
-      - name: Deploy via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
-          server: metallzh.beget.tech
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./dist/
-          server-dir: /metallzh.beget.tech/public_html/
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

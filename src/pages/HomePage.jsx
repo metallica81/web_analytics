@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { asset } from "../utils/asset";
 import {
   HandHelping,
   Clock3,
@@ -45,7 +46,7 @@ export default function HomePage({ completedModules = [], moduleScores = {} }) {
       <div
         className="pointer-events-none absolute inset-0 z-0"
         style={{
-          backgroundImage: "url('/watermark.svg')",
+          backgroundImage: `url('${asset("watermark.svg")}')`,
           backgroundRepeat: "no-repeat",
           backgroundPosition: "center",
           backgroundSize: "110%",
@@ -72,7 +73,7 @@ export default function HomePage({ completedModules = [], moduleScores = {} }) {
         {/* Логотип по центру, клик → главная */}
         <Link to="/">
           <img
-            src="/logo.png"
+            src={asset("logo.png")}
             alt="РОСГОССТРАХ"
             className="h-24 object-contain mx-auto"
           />
@@ -126,7 +127,7 @@ export default function HomePage({ completedModules = [], moduleScores = {} }) {
             >
               {/* Картинка героя */}
               <img
-                src="/hands.png"
+                src={asset("hands.png")}
                 alt="Командная работа"
                 className="h-[360px] w-full object-cover"
               />
